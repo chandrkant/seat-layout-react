@@ -4,19 +4,26 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 export default function SeatLayout(props) {
   const [seats, setSeats] = useState([]);
-  const [tripDetails, setTripDetails] = useState({ lower: [], upper: [] });
-  const [tripID, setTripID] = useState("");
+  const [lower, setLower] = useState([]);
+  const [upper, setUpper] = useState([]);
+  const [tripID, setTripID] = useState(props.match.params.trip_id);
   const [showLower, setShowLower] = useState(true)
-  // setTripID(props.match.params.trip_id);
   const getLayout = async () => {
-    console.log('====================================');
-    console.log(tripID);
-    console.log('====================================');
+    setTripID(props.match.params.trip_id);
     const data = await fetch(
       `https://new.railyatri.in/v2/bus-seat-layout-json?trip_id=${props.match.params.trip_id}&no_of_passengers=1&operator_id=28028&v_code=176&device_type_id=4&provider_id=5&is_new_reduce_basefare=1&request_src=mweb&user_id=-1578892000`
     );
     const tripData = await data.json();
-    setTripDetails(tripData);
+    if(tripID.includes('MTS') || tripID.includes('ITS')){
+      setUpper(tripData.upper.reverse());
+    }else{
+      setUpper(tripData.upper)
+    }
+    if(tripID.includes('ITS') ){
+      setLower(tripData.lower.reverse())
+    }else{
+      setLower(tripData.lower)
+    }
   };
   const seatSelectedSeats = seat => {
     console.log("====================================");
@@ -33,7 +40,7 @@ export default function SeatLayout(props) {
       <div id="mobile_lower" style={{ display: ( showLower ? 'block' : 'none')}}>
         <div className="seats_row">
           <div className="temp-lower">
-            {(tripDetails.lower ? tripDetails.lower.reverse() : []).map((row,index) => (
+            {lower.map((row,index) => (
               <div className="col-xs-2 seats_row_spc" key={'lower_'+index}>
                 {row.map(seat => (
                   <div className="seat-wrap" key={seat.name}>
@@ -59,7 +66,7 @@ export default function SeatLayout(props) {
       <div id="mobile_upper" style={{display: (!showLower ? 'block' : 'none')}}>
         <div className="seats_row">
           <div className="temp-upper">
-            {(tripDetails.upper ? tripDetails.upper.reverse() : []).map((row,index) => (
+            {upper.map((row,index) => (
               <div className="col-xs-2 seats_row_spc" key={'upper_'+index}>
                 {row.map(seat => (
                   <div className="seat-wrap" key={seat.name}>
