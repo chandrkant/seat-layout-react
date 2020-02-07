@@ -377,6 +377,7 @@ div#upper {
   top: 5px;
   width: 100%;
   margin: 0 auto;
+  left: 0;
   text-align: center;
   color: #363636;
   font-size: 10px;
@@ -386,6 +387,7 @@ div#upper {
   top: 2em;
   width: 100%;
   margin: 0 auto;
+  left: 0;
   text-align: center;
   color: #363636;
   font-size: 10px;
@@ -734,12 +736,16 @@ div.lines {
 img.steering {
   display: inline-block;
   position: absolute;
-  top: 7.5%;
+  top: 4%;
   right: 15%;
   width: 35px;
   height: 35px;
 }
 /*Bus top slide animation css*/
+ .tab-content img#bus-front {
+	position: absolute;
+  top: 0;
+}
 .tab-content img#bus-front {
   top: -200px;
   -webkit-animation: t-slide 0.5s forwards;
@@ -747,6 +753,7 @@ img.steering {
   animation: t-slide 0.5s forwards;
   animation-delay: 0.2s;
 }
+
 @-webkit-keyframes t-slide {
   100% {
     top: 0;
@@ -760,8 +767,8 @@ img.steering {
 /*Bus top slide animation css*/
 
 .tab-content img#bus-end {
-  /* position: absolute; */
-  /* bottom: 0; */
+  position: absolute; 
+  bottom: 0;
 }
 /*Bus bottom slide animation css*/
 .tab-content img#bus-end {
@@ -859,7 +866,7 @@ img.steering {
   position: absolute;
   background: #666666;
   width: 1px;
-  height: 44.3%;
+  height: 84.3%;
   top: 12%;
   /*left: 9.71%;*/
   left: -100px;
@@ -885,7 +892,7 @@ img.steering {
   position: absolute;
   background: #666666;
   width: 1px;
-  height: 44.3%;
+  height: 84.3%;
   top: 12%;
   /*right: 9.71%;*/
   right: -100px;
@@ -921,4 +928,24 @@ img.steering {
     transform: rotate(-1deg);
   }
 }
+.tab-content{
+  float: left;
+  width: 100%;
+  position: relative;
+  margin-top: 0em;
+  padding-top: 5em;
+  margin-bottom: 45px;
+}
 /*Bus steering rotate animation css*/
+.tab-btn-blk{
+  margin:15px 0;
+}
+.tab-btn-blk .tab-btn{
+  height:36px;
+  margin-right: 10px;;
+}
+.bus-seats{
+  position: relative;
+  display: block;
+  float: left;
+}

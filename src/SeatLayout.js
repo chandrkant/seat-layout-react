@@ -3,14 +3,13 @@ import "./mobile.css";
 import "bootstrap/dist/css/bootstrap.css";
 const init = props => {
   return {
-    lower: [],
-    upper: [],
     birth: [],
     seatsData: {},
     tripId: props.match.params.trip_id,
     activeTab: true,
-    showTabs: false,
+    showTabs: true,
     seats: [],
+    fares: [],
     marginL: 0,
     marginU: 0
   };
@@ -32,6 +31,8 @@ const reducer = (state, action) => {
       return { ...state, showTabs: action.value };
     case "ACTIVE_TAB":
       return { ...state, activeTab: action.value };
+    case "SET_FARES":
+      return { ...state, fares: action.value };
     default:
       return state;
   }
@@ -40,7 +41,7 @@ export default function SeatLayout(props) {
   const [state, dispetch] = useReducer(reducer, props, init);
   const getLayout = async () => {
     const data = await fetch(
-      `https://new.railyatri.in/v2/bus-seat-layout-json?trip_id=${state.tripId}&no_of_passengers=1&operator_id=28028&v_code=176&device_type_id=4&provider_id=5&is_new_reduce_basefare=1&request_src=mweb&user_id=-1578892000`
+      `http://localhost:3001/v2/bus-seat-layout-json?trip_id=${state.tripId}&no_of_passengers=1&operator_id=28028&v_code=176&device_type_id=4&provider_id=5&is_new_reduce_basefare=1&request_src=mweb&user_id=-1578892000`
     );
     const tripData = await data.json();
     dispetch({ type: "SEAT_DATA", value: tripData });
@@ -48,8 +49,8 @@ export default function SeatLayout(props) {
     if (tripData.success) {
       dispetch({ type: "SET_BERTH", value: tripData.lower });
       dispetch({ type: "ACTIVE_TAB", value: true });
+      dispetch({ type: "SET_FARES", value: tripData.fares });
       if (tripData.upper.length > 0) {
-        debugger;
         dispetch({ type: "SHOW_TAB", value: true });
       }
     }
@@ -81,6 +82,7 @@ export default function SeatLayout(props) {
       dispetch({ type: "MRGINL", value: mrl });
     }
   };
+  const setFilterFare = f => {};
   useEffect(() => {
     getLayout();
   }, []);
@@ -89,70 +91,89 @@ export default function SeatLayout(props) {
   }, [state.birth]);
 
   return (
-    <div className="tab-content">
-      <div id="bus-leftside"></div>
-      <div id="bus-rightside"></div>
-      <div style={{ display: state.showTabs ? "block" : "none" }}>
-        <button
-          onClick={() => setBirth(true)}
-          className={state.activeTab ? "btn btn-primary" : "btn btn-default"}
-        >
-          Lower
-        </button>
-        <button
-          onClick={() => setBirth(false)}
-          className={!state.activeTab ? "btn btn-primary" : "btn btn-default"}
-        >
-          Upper
-        </button>
-      </div>
-
-      <img
-        id="bus-front"
-        className="img-responsive"
-        src="https://rytest.storage.googleapis.com/assets/bus_web/seat-layout/bus-dashboard-8280a5ff3fc4e0916aff60d59d3b163e9586070bbafe06071a0f2383d9a34718.png"
-        alt="Bus dashboard"
-      />
-      <img
-        id="loading"
-        className="steering"
-        src="https://rytest.storage.googleapis.com/assets/bus_web/seat-layout/bus-steering-9a6643844547093c3ee12395a4dc1335552584b3fd83a30ac48f4b704f38f0cb.png"
-        alt="Bus steering"
-      ></img>
-      <div id="mobile_lower">
-        <div className="seats_row">
-          <div
-            className="temp-lower"
-            style={{ marginLeft: `${state.marginL}px` }}
+    <div>
+      <div className="col-xs-12 text-center fare-filter-blk">
+        <ul className="fare-filter">
+          <li data-fare="" className="activeli">
+            All
+          </li>
+          {state.fares.map(f => (
+            <li data-fare="" className="" onClick={() => setFilterFare(f)} key = {f}>
+              {f}
+            </li>
+          ))}
+        </ul>
+        </div> 
+        <div className='tab-btn-blk col-xs-12 text-center' style={{ display: state.showTabs ? "block" : "none" }}>
+          <button
+            onClick={() => setBirth(true)}
+            className={state.activeTab ? "btn btn-primary tab-btn" : "btn btn-default tab-btn"}
           >
-            {(state.birth || []).map((row, index) => (
-              <div className="col-xs-2 seats_row_spc" key={"lower_" + index}>
-                {row.map(seat => (
-                  <div className="seat-wrap" key={seat.name}>
-                    <div
-                      className={seat.css_1}
-                      onClick={() => seatSelectedSeats(seat)}
-                    >
-                      <div className={seat.css_2}>
-                        {seat.name}
-                        <span className={seat.span_1}></span>
-                        <span className={seat.span_2}></span>
-                        <span className={seat.span_2}></span>
+            Lower
+          </button>
+          <button
+            onClick={() => setBirth(false)}
+            className={!state.activeTab ? "btn btn-primary tab-btn" : "btn btn-default tab-btn"}
+          >
+            Upper
+          </button>
+        </div>
+        <div className="tab-content">
+        <img
+          id="loading"
+          className="steering"
+          src="https://rytest.storage.googleapis.com/assets/bus_web/seat-layout/bus-steering-9a6643844547093c3ee12395a4dc1335552584b3fd83a30ac48f4b704f38f0cb.png"
+          alt="Bus steering"
+        ></img>
+        <img
+          id="bus-front"
+          className="img-responsive"
+          src="https://rytest.storage.googleapis.com/assets/bus_web/seat-layout/bus-dashboard-8280a5ff3fc4e0916aff60d59d3b163e9586070bbafe06071a0f2383d9a34718.png"
+          alt="Bus dashboard"
+        />
+        <div id="bus-leftside"></div>
+        <div id="bus-rightside"></div>
+
+        <div  className="bus-seats">
+       
+      
+        <div id="mobile_lower">
+          <div className="seats_row">
+            <div
+              className="temp-lower"
+              style={{ marginLeft: `${state.marginL}px` }}
+            >
+              {(state.birth || []).map((row, index) => (
+                <div className="col-xs-2 seats_row_spc" key={"lower_" + index}>
+                  {row.map(seat => (
+                    <div className="seat-wrap" key={seat.name}>
+                      <div
+                        className={seat.css_1}
+                        onClick={() => seatSelectedSeats(seat)}
+                      >
+                        <div className={seat.css_2}>
+                          <span className="seat-name">{seat.name}</span>
+                          <span className={seat.span_1}></span>
+                          <span className={seat.span_2}></span>
+                          <span className={seat.span_2}></span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ))}
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+        <img
+          id="bus-end"
+          className="img-responsive"
+          src="https://rytest.storage.googleapis.com/assets/bus_web/seat-layout/bus-tailend-de06ba9d8e6c96c555d4da707543acf2415b287b65a1ef25c6c05a9a9d07768c.png"
+          alt="Bus tailend"
+        ></img>
+        </div>
       </div>
-      <img
-        id="bus-end"
-        className="img-responsive"
-        src="https://rytest.storage.googleapis.com/assets/bus_web/seat-layout/bus-tailend-de06ba9d8e6c96c555d4da707543acf2415b287b65a1ef25c6c05a9a9d07768c.png"
-        alt="Bus tailend"
-      ></img>
+      
     </div>
   );
 }
