@@ -41,7 +41,7 @@ export default function SeatLayout(props) {
   const [state, dispetch] = useReducer(reducer, props, init);
   const getLayout = async () => {
     const data = await fetch(
-      `http://localhost:3001/v2/bus-seat-layout-json?trip_id=${state.tripId}&no_of_passengers=1&operator_id=28028&v_code=176&device_type_id=4&provider_id=5&is_new_reduce_basefare=1&request_src=mweb&user_id=-1578892000`
+      `http://new.railyatri.in//v2/bus-seat-layout-json?trip_id=${state.tripId}&no_of_passengers=1&operator_id=28028&v_code=176&device_type_id=4&provider_id=5&is_new_reduce_basefare=1&request_src=mweb&user_id=-1578892000`
     );
     const tripData = await data.json();
     dispetch({ type: "SEAT_DATA", value: tripData });
