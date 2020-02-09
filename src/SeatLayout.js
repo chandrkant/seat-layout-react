@@ -11,7 +11,8 @@ const init = props => {
     seats: [],
     fares: [],
     marginL: 0,
-    marginU: 0
+    marginU: 0,
+    fareFilter: 0
   };
 };
 
@@ -31,6 +32,8 @@ const reducer = (state, action) => {
       return { ...state, activeTab: action.value };
     case "SET_FARES":
       return { ...state, fares: action.value };
+    case "SET_FARE_FILTER":
+      return { ...state, fareFilter: action.value };
     default:
       return state;
   }
@@ -55,27 +58,29 @@ export default function SeatLayout(props) {
   };
 
   const setBirth = f => {
+    const item = document
+      .getElementsByClassName("fare-filter")[0]
+      .querySelectorAll(".activeli")[0];
     if (f) {
       dispetch({ type: "SET_BERTH", value: state.seatsData.lower });
+      setFilterFare(state.fareFilter, state.seatsData.lower, item);
       dispetch({ type: "ACTIVE_TAB", value: f });
     } else {
       dispetch({ type: "SET_BERTH", value: state.seatsData.upper });
+      setFilterFare(state.fareFilter, state.seatsData.upper, item);
       dispetch({ type: "ACTIVE_TAB", value: f });
     }
   };
 
   const seatSelectedSeats = (seat, target) => {
-    if (
+    let _seat_present =
       state.seats.filter(s => {
         return s.name === seat.name;
-      }).length > 0 ||
-      state.seats.length < 6
-    ) {
-      if (
-        state.seats.filter(s => {
-          return s.name === seat.name;
-        }).length > 0
-      ) {
+      }).length > 0
+        ? true
+        : false;
+    if (_seat_present || state.seats.length < 6) {
+      if (_seat_present) {
         target.classList.remove("_1LG_");
         dispetch({
           type: "SET_SEATS",
@@ -117,7 +122,35 @@ export default function SeatLayout(props) {
       );
     }
   };
-  const setFilterFare = f => {};
+  const setFilterFare = (f, seatItreate, target) => {
+    dispetch({ type: "SET_FARE_FILTER", value: f });
+    const list = document
+      .getElementsByClassName("fare-filter")[0]
+      .querySelectorAll("li");
+    for (const item of list) {
+      item.classList.remove("activeli");
+    }
+    target.classList.add("activeli");
+    const filtrseats = seatItreate.filter(row => {
+      return row.filter(seat => {
+        if (seat.available === "true") {
+          seat.css_2 = seat.css_2.split("IlqM").join("");
+          // seat.css_2 = seat.css_2.split(" ").join(" IlqM ");
+        }
+        if (
+          f !== 0 &&
+          seat.available === "true" &&
+          seat.discounted_base_fare !== f
+        ) {
+          var tmp = seat.css_2.split(" ");
+          tmp.push("IlqM");
+          seat.css_2 = tmp.join(" ");
+        }
+        return seat;
+      });
+    });
+    dispetch({ type: "SET_BERTH", value: filtrseats });
+  };
   useEffect(() => {
     getLayout();
   }, []);
@@ -129,11 +162,18 @@ export default function SeatLayout(props) {
     <div>
       <div className="col-xs-12 text-center fare-filter-blk">
         <ul className="fare-filter">
-          <li className="activeli" onClick={e => setFilterFare(0)}>
+          <li
+            className="activeli"
+            onClick={e => setFilterFare(0, state.birth, e.currentTarget)}
+          >
             All
           </li>
           {state.fares.map(f => (
-            <li className="" onClick={e => setFilterFare(f)} key={f}>
+            <li
+              className=""
+              onClick={e => setFilterFare(f, state.birth, e.currentTarget)}
+              key={f}
+            >
               {f}
             </li>
           ))}
@@ -187,7 +227,7 @@ export default function SeatLayout(props) {
                 className="temp-lower"
                 style={{ marginLeft: `${state.marginL}px` }}
               >
-                {(state.birth || []).map((row, index) => (
+                {state.birth.map((row, index) => (
                   <div
                     className="col-xs-2 seats_row_spc"
                     key={"lower_" + index}
