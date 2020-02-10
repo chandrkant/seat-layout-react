@@ -78,8 +78,10 @@ function Search(props) {
   };
 
   const getBuses = props => {
+    debugger;
     if (isEmpty(searchParams)) {
-      props.history.push(
+      props.handalParams(searchParams);
+      props.value.history.push(
         `/bus-listing/${searchParams.from}-to-${searchParams.to}-buses`
       );
     } else {

@@ -72,7 +72,7 @@ export default function SeatLayout(props) {
     }
   };
 
-  const seatSelectedSeats = (seat, target) => {
+  const seatSelectedSeats = (seat, target, props) => {
     let _seat_present =
       state.seats.filter(s => {
         return s.name === seat.name;
@@ -97,6 +97,7 @@ export default function SeatLayout(props) {
     } else {
       alert("Max seat limit 6");
     }
+    props.handalSeats(state.seats);
   };
 
   const setWidth = () => {
@@ -239,7 +240,7 @@ export default function SeatLayout(props) {
                             id={seat.name}
                             className={seat.css_2}
                             onClick={e =>
-                              seatSelectedSeats(seat, e.currentTarget)
+                              seatSelectedSeats(seat, e.currentTarget, props)
                             }
                           >
                             <span className="seat-name">{seat.name}</span>
