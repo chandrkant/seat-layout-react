@@ -66,10 +66,11 @@ function Search(props) {
       }
     }
   };
-  const getBusList =async () => {
+  const getBusList =async (props) => {
     if (isEmpty(searchParams)) {
       const data = await fetch(`https://test.railyatri.in/redbus/get-available-trips.json?source=${searchParams.fCode}&destination=${searchParams.tCode}&doj=${searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`)
       const buslist = await data.json();
+      props.handalBusList(buslist);
     }
   };
   const isEmpty = obj => {
@@ -105,6 +106,7 @@ function Search(props) {
           clearOnEscape
           onChange={(event, newValue) => {
             onSelect(newValue, "f");
+            getBusList(props);
           }}
           renderInput={params => (
             <TextField
@@ -122,6 +124,7 @@ function Search(props) {
           clearOnEscape
           onChange={(event, newValue) => {
             onSelect(newValue, "t");
+            getBusList(props);
           }}
           renderInput={params => (
             <TextField

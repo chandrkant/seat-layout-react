@@ -38,6 +38,9 @@ function App(props) {
   const handalSeats = seats => {
     dispatch({ type: "SEATS", value: seats });
   };
+  const handalBusList = list => {
+    dispatch({ type: "LIST", value: list });
+  };
   return (
     <div>
       <Nav></Nav>
@@ -46,17 +49,27 @@ function App(props) {
           <Route
             exact
             path="/"
-            component={(props) => <Search {...props} handalParams={handalParams} />}
+            component={props => (
+              <Search
+                {...props}
+                handalParams={handalParams}
+                handalBusList={handalBusList}
+              />
+            )}
           ></Route>
           <Route
             exact
             path="/bus-listing/:from-to-:to-buses"
-            component={(props) => <BusListing {...props} handalTrip={handalTrip} />}
+            component={props => (
+              <BusListing {...props} handalTrip={handalTrip} />
+            )}
           ></Route>
           <Route
             exact
             path="/seat-layout/:trip_id"
-            component={(props) => <SeatLayout {...props} handalSeats={handalSeats} />}
+            component={props => (
+              <SeatLayout {...props} handalSeats={handalSeats} />
+            )}
           ></Route>
         </div>
       </Router>
