@@ -9,7 +9,8 @@ const init = () => {
   return {
     seats: [],
     searchParams: {},
-    trip: {}
+    trip: {},
+    list: {}
   };
 };
 const reducer = (state, action) => {
@@ -20,6 +21,8 @@ const reducer = (state, action) => {
       return { ...state, searchParams: action.value };
     case "TRIP":
       return { ...state, trip: action.value };
+    case "LIST":
+      return { ...state, list: action.value };
     default:
       return state;
   }
@@ -43,17 +46,17 @@ function App(props) {
           <Route
             exact
             path="/"
-            component={() => <Search handalParams={handalParams} />}
+            component={(props) => <Search {...props} handalParams={handalParams} />}
           ></Route>
           <Route
             exact
             path="/bus-listing/:from-to-:to-buses"
-            component={() => <BusListing handalTrip={handalTrip} />}
+            component={(props) => <BusListing {...props} handalTrip={handalTrip} />}
           ></Route>
           <Route
             exact
             path="/seat-layout/:trip_id"
-            component={() => <SeatLayout handalSeats={handalSeats} />}
+            component={(props) => <SeatLayout {...props} handalSeats={handalSeats} />}
           ></Route>
         </div>
       </Router>

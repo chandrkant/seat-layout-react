@@ -31,7 +31,7 @@ function Search(props) {
   const handleDateChange = date => {
     setSearchParams({
       ...searchParams,
-      doj: date.toLocaleDateString()
+      doj: date.toLocaleDateString().split('/').join('-')
     });
     setSelectedDate(date);
   };
@@ -66,7 +66,12 @@ function Search(props) {
       }
     }
   };
-
+  const getBusList =async () => {
+    if (isEmpty(searchParams)) {
+      const data = await fetch(`https://test.railyatri.in/redbus/get-available-trips.json?source=${searchParams.fCode}&destination=${searchParams.tCode}&doj=${searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`)
+      const buslist = await data.json();
+    }
+  };
   const isEmpty = obj => {
     let valid = true;
     for (var key in obj) {
@@ -78,10 +83,9 @@ function Search(props) {
   };
 
   const getBuses = props => {
-    debugger;
     if (isEmpty(searchParams)) {
       props.handalParams(searchParams);
-      props.value.history.push(
+      props.history.push(
         `/bus-listing/${searchParams.from}-to-${searchParams.to}-buses`
       );
     } else {
@@ -100,7 +104,6 @@ function Search(props) {
           id="from-city"
           clearOnEscape
           onChange={(event, newValue) => {
-            console.log(newValue);
             onSelect(newValue, "f");
           }}
           renderInput={params => (
@@ -136,7 +139,7 @@ function Search(props) {
               margin="normal"
               id="date-picker-dialog"
               label="Date picker dialog"
-              format="MM/dd/yyyy"
+              format="dd/MM/yyyy"
               value={selectedDate}
               onChange={handleDateChange}
               KeyboardButtonProps={{
