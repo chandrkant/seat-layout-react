@@ -1,40 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { format } from "date-fns";
+import { BrowserRouter as Router,Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
+import BusListing from "./BusListing";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-
+export const BusListData = React.createContext();
+const init = props => {
+  return {
+    searchParams: {
+      from: "",
+      to: "",
+      fCode: "",
+      tCode: "",
+      doj: format(new Date(), "dd-MM-yyyy"),
+      altDoj: format(new Date(), "MMM dd, yyyy")
+    },
+    cities: [],
+    selectedDate: new Date(),
+    listing:{}
+  };
+};
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "PARAMS":
+      return { ...state, searchParams: action.value };
+    case "CITIES":
+      return { ...state, cities: action.value };
+    case "SET_DATE":
+      return { ...state, selectedDate: action.value };
+    case "LIST":
+        return { ...state, listing: action.value };  
+    default:
+      return state;
+  }
+};
 function Search(props) {
-  console.log("Search Page");
-  const [cities, setCities] = useState([]);
-  const [searchParams, setSearchParams] = useState({
-    from: "",
-    to: "",
-    fCode: "",
-    tCode: "",
-    doj: format(new Date(), "dd-MM-yyyy"),
-    altDoj: format(new Date(), "MMM dd, yyyy")
-  });
-  const [list, setList] = useState({});
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [state, dispatch] = useReducer(reducer, props, init);
   const handleDateChange = date => {
-    setSearchParams({
-      ...searchParams,
-      doj: format(date, "dd-MM-yyyy"),
-      altDoj: date
+    dispatch({
+      type: "PARAMS",
+      value: {
+        ...state.searchParams,
+        doj: format(date, "dd-MM-yyyy"),
+        altDoj: format(date, "MMM dd, yyyy")
+      }
     });
-    setSelectedDate(date);
+    dispatch({ type: "SET_DATE", value: date });
     getBusList(props);
   };
 
   const defaultProps = {
-    options: cities,
+    options: state.cities,
     getOptionLabel: option => option.city_name
   };
 
@@ -43,33 +66,40 @@ function Search(props) {
       "https://api.railyatri.in/redbus/source-city-list.json"
     );
     const city = await data.json();
-    setCities(city.city_list);
+    dispatch({ type: "CITIES", value: city.city_list });
   };
 
   const onSelect = (option, type) => {
     if (option) {
       if (type === "f") {
-        setSearchParams({
-          ...searchParams,
-          fCode: option.city_id,
-          from: option.city_name
+        dispatch({
+          type: "PARAMS",
+          value: {
+            ...state.searchParams,
+            fCode: option.city_id,
+            from: option.city_name
+          }
         });
       } else {
-        setSearchParams({
-          ...searchParams,
-          tCode: option.city_id,
-          to: option.city_name
+        dispatch({
+          type: "PARAMS",
+          value: {
+            ...state.searchParams,
+            tCode: option.city_id,
+            to: option.city_name
+          }
         });
       }
     }
     getBusList(props);
   };
   const getBusList = props => {
-    if (isEmpty(searchParams)) {
+    if (isEmpty(state.searchParams)) {
       fetch(
-        `https://test.railyatri.in/redbus/get-available-trips.json?source=${searchParams.fCode}&destination=${searchParams.tCode}&doj=${searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`
+        `https://test.railyatri.in/redbus/get-available-trips.json?source=${state.searchParams.fCode}&destination=${state.searchParams.tCode}&doj=${state.searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`
       ).then(resp => {
-        setList(resp.json());
+        // props.handalBusList(resp.json());
+        // setList(resp.json());
       });
     }
   };
@@ -84,11 +114,10 @@ function Search(props) {
   };
 
   const getBuses = props => {
-    if (isEmpty(searchParams)) {
-      props.handalParams(searchParams);
-      props.handalBusList(list);
+    if (isEmpty(state.searchParams)) {
+      props.handalParams(state.searchParams);
       props.history.push(
-        `/bus-listing/${searchParams.from}-to-${searchParams.to}-buses`
+        `/bus-listing/${state.searchParams.from}-to-${state.searchParams.to}-buses`
       );
     } else {
     }
@@ -143,7 +172,7 @@ function Search(props) {
             id="date-picker-dialog"
             label="Date picker dialog"
             format="MMM dd, yyyy"
-            value={selectedDate}
+            value={state.selectedDate}
             onChange={handleDateChange}
             minDate={new Date()}
             clearable
@@ -153,10 +182,22 @@ function Search(props) {
       </MuiPickersUtilsProvider>
 
       <div className="">
-        <button className="btn btn-primary" onClick={() => getBuses(props)}>
+        <button className="btn btn-primary btn-block" onClick={() => getBuses(props)}>
           SEARCH
         </button>
       </div>
+      <Router>
+      <Route
+              exact
+              path="/bus-listing/:from-to-:to-buses"
+              component={props => (
+                <BusListData.Provider>
+                  <BusListing {...props} />
+                </BusListData.Provider>
+                
+              )}
+            ></Route>
+            </Router>
     </div>
   );
 }

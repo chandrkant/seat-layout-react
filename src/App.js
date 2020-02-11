@@ -1,9 +1,10 @@
 import React, { useReducer } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { format } from "date-fns";
 import SeatLayout from "./components/SeatLayout";
 import Search from "./components/Search";
-import BusListing from "./components/BusListing";
+// import BusListing from "./components/BusListing";
 import Nav from "./components/nav/Nav";
 const init = () => {
   return {
@@ -41,6 +42,7 @@ function App(props) {
   const handalBusList = list => {
     dispatch({ type: "LIST", value: list });
   };
+  
   return (
     <div>
       <Nav></Nav>
@@ -58,13 +60,13 @@ function App(props) {
                 />
               )}
             ></Route>
-            <Route
+            {/* <Route
               exact
               path="/bus-listing/:from-to-:to-buses"
               component={props => (
                 <BusListing {...props} handalTrip={handalTrip} />
               )}
-            ></Route>
+            ></Route> */}
             <Route
               exact
               path="/seat-layout/:trip_id"
