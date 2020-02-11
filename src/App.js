@@ -46,31 +46,33 @@ function App(props) {
       <Nav></Nav>
       <Router>
         <div className="App">
-          <Route
-            exact
-            path="/"
-            component={props => (
-              <Search
-                {...props}
-                handalParams={handalParams}
-                handalBusList={handalBusList}
-              />
-            )}
-          ></Route>
-          <Route
-            exact
-            path="/bus-listing/:from-to-:to-buses"
-            component={props => (
-              <BusListing {...props} handalTrip={handalTrip} />
-            )}
-          ></Route>
-          <Route
-            exact
-            path="/seat-layout/:trip_id"
-            component={props => (
-              <SeatLayout {...props} handalSeats={handalSeats} />
-            )}
-          ></Route>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              component={props => (
+                <Search
+                  {...props}
+                  handalParams={handalParams}
+                  handalBusList={handalBusList}
+                />
+              )}
+            ></Route>
+            <Route
+              exact
+              path="/bus-listing/:from-to-:to-buses"
+              component={props => (
+                <BusListing {...props} handalTrip={handalTrip} />
+              )}
+            ></Route>
+            <Route
+              exact
+              path="/seat-layout/:trip_id"
+              component={props => (
+                <SeatLayout {...props} handalSeats={handalSeats} />
+              )}
+            ></Route>
+          </Switch>
         </div>
       </Router>
     </div>

@@ -11,7 +11,6 @@ const init = props => {
     seats: [],
     fares: [],
     marginL: 0,
-    marginU: 0,
     fareFilter: 0
   };
 };
@@ -39,6 +38,8 @@ const reducer = (state, action) => {
   }
 };
 export default function SeatLayout(props) {
+  console.log("Seat Layout");
+
   const [state, dispetch] = useReducer(reducer, props, init);
   const getLayout = async () => {
     const data = await fetch(
@@ -101,8 +102,7 @@ export default function SeatLayout(props) {
   };
 
   const setWidth = () => {
-    var mrl,
-      mru = 0;
+    var mrl = 0;
     if (state.birth.length > 0) {
       mrl =
         (document

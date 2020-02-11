@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "date-fns";
+import { format } from "date-fns";
 import "bootstrap/dist/css/bootstrap.css";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Grid from "@material-ui/core/Grid";
@@ -10,30 +9,28 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
+
 function Search(props) {
-  const theme = createMuiTheme({
-    typography: {
-      // In Chinese and Japanese the characters are usually larger,
-      // so a smaller fontsize may be appropriate.
-      fontSize: 14
-    }
-  });
+  console.log("Search Page");
   const [cities, setCities] = useState([]);
   const [searchParams, setSearchParams] = useState({
     from: "",
     to: "",
     fCode: "",
     tCode: "",
-    doj: ""
+    doj: format(new Date(), "dd-MM-yyyy"),
+    altDoj: format(new Date(), "MMM dd, yyyy")
   });
+  const [list, setList] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
-
   const handleDateChange = date => {
     setSearchParams({
       ...searchParams,
-      doj: date.toLocaleDateString().split('/').join('-')
+      doj: format(date, "dd-MM-yyyy"),
+      altDoj: date
     });
     setSelectedDate(date);
+    getBusList(props);
   };
 
   const defaultProps = {
@@ -65,12 +62,15 @@ function Search(props) {
         });
       }
     }
+    getBusList(props);
   };
-  const getBusList =async (props) => {
+  const getBusList = props => {
     if (isEmpty(searchParams)) {
-      const data = await fetch(`https://test.railyatri.in/redbus/get-available-trips.json?source=${searchParams.fCode}&destination=${searchParams.tCode}&doj=${searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`)
-      const buslist = await data.json();
-      props.handalBusList(buslist);
+      fetch(
+        `https://test.railyatri.in/redbus/get-available-trips.json?source=${searchParams.fCode}&destination=${searchParams.tCode}&doj=${searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`
+      ).then(resp => {
+        setList(resp.json());
+      });
     }
   };
   const isEmpty = obj => {
@@ -86,6 +86,7 @@ function Search(props) {
   const getBuses = props => {
     if (isEmpty(searchParams)) {
       props.handalParams(searchParams);
+      props.handalBusList(list);
       props.history.push(
         `/bus-listing/${searchParams.from}-to-${searchParams.to}-buses`
       );
@@ -99,60 +100,58 @@ function Search(props) {
 
   return (
     <div className="container-fluid">
-      <MuiThemeProvider theme={theme}>
-        <Autocomplete
-          {...defaultProps}
-          id="from-city"
-          clearOnEscape
-          onChange={(event, newValue) => {
-            onSelect(newValue, "f");
-            getBusList(props);
-          }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="From City"
-              margin="normal"
-              name="from_city"
-              fullWidth
-            />
-          )}
-        />
-        <Autocomplete
-          {...defaultProps}
-          id="to-city"
-          clearOnEscape
-          onChange={(event, newValue) => {
-            onSelect(newValue, "t");
-            getBusList(props);
-          }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="To City"
-              margin="normal"
-              name="to_city"
-              fullWidth
-            />
-          )}
-        />
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container justify="space-around">
-            <KeyboardDatePicker
-              margin="normal"
-              id="date-picker-dialog"
-              label="Date picker dialog"
-              format="dd/MM/yyyy"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-              fullWidth
-            />
-          </Grid>
-        </MuiPickersUtilsProvider>
-      </MuiThemeProvider>
+      <Autocomplete
+        {...defaultProps}
+        id="from-city"
+        clearOnEscape
+        onChange={(event, newValue) => {
+          onSelect(newValue, "f");
+          event.preventDefault();
+        }}
+        renderInput={params => (
+          <TextField
+            {...params}
+            label="From City"
+            margin="normal"
+            name="from_city"
+            fullWidth
+          />
+        )}
+      />
+      <Autocomplete
+        {...defaultProps}
+        id="to-city"
+        clearOnEscape
+        onChange={(event, newValue) => {
+          onSelect(newValue, "t");
+          event.preventDefault();
+        }}
+        renderInput={params => (
+          <TextField
+            {...params}
+            label="To City"
+            margin="normal"
+            name="to_city"
+            fullWidth
+          />
+        )}
+      />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid container justify="space-around">
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            label="Date picker dialog"
+            format="MMM dd, yyyy"
+            value={selectedDate}
+            onChange={handleDateChange}
+            minDate={new Date()}
+            clearable
+            fullWidth
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
+
       <div className="">
         <button className="btn btn-primary" onClick={() => getBuses(props)}>
           SEARCH
