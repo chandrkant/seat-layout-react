@@ -10,6 +10,7 @@ export default React.createContext({
     altDoj: format(new Date(), "MMM dd, yyyy")
   },
   cities: [],
+  destcities:[],
   selectedDate: new Date(),
   listing: { availableTrips: [] },
   isLoading: true,
@@ -17,5 +18,6 @@ export default React.createContext({
   sourceCitys: () => {},
   onSelect: (option, type) => {},
   getBusList: props => {},
-  getBuses: props => {}
+  getBuses: props => {},
+  destCitys: id=>{}
 });

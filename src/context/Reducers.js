@@ -5,6 +5,7 @@ export const SET_DATE = "SET_DATE";
 export const LIST = "LIST";
 export const LOADING = "LOADING";
 export const QUERYPARAMS = "QUERYPARAMS";
+export const DESTCITIES = "DESTCITIES";
 const handleDateChange = (date, state) => {
   const params = {
     ...state.searchParams,
@@ -36,7 +37,6 @@ const onSelect = (option, type, state) => {
       };
     }
   }
-  //   getBusList(props);
 };
 
 export const busReducer = (state, action) => {
@@ -53,6 +53,8 @@ export const busReducer = (state, action) => {
       return { ...state, isLoading: action.value };
     case QUERYPARAMS:
       return { ...state, searchParams: action.value };
+    case DESTCITIES: 
+    return { ...state, destcities: action.value };
     default:
       return state;
   }

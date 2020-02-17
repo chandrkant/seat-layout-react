@@ -11,9 +11,18 @@ import {
 function Search(props) {
   const context = useContext(BusContext);
   const defaultProps = {
-    options: context.cities,
     getOptionLabel: option => option.city_name,
-    onInputChange: (event, value) => {}
+    filterOptions: (options, state) => {
+      if (state.inputValue.length > 1) {
+        return options.filter(city => {
+          return city.city_name
+            .toLowerCase()
+            .startsWith(state.inputValue);
+        });
+      } else {
+        return [];
+      }
+    }
   };
 
   const isEmpty = obj => {
@@ -45,6 +54,7 @@ function Search(props) {
     <React.Fragment>
       <div className="container-fluid">
         <Autocomplete
+          options={context.cities}
           {...defaultProps}
           id="from-city"
           defaultValue={{
@@ -68,6 +78,7 @@ function Search(props) {
           )}
         />
         <Autocomplete
+          options={context.destcities}
           {...defaultProps}
           id="to-city"
           onChange={(event, newValue) => {

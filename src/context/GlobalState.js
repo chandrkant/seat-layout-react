@@ -5,6 +5,7 @@ import {
   busReducer,
   PARAMS,
   CITIES,
+  DESTCITIES,
   SET_DATE,
   LIST,
   LOADING,
@@ -20,6 +21,7 @@ const init = {
     altDoj: format(new Date(), "MMM dd, yyyy")
   },
   cities: [],
+  destcities: [],
   selectedDate: new Date(),
   listing: { availableTrips: [] },
   isLoading: true
@@ -32,16 +34,24 @@ const GlobalState = props => {
   const handleDateChange = date => {
     dispatch({ type: SET_DATE, value: date });
   };
+
   const sourceCitys = async () => {
     const data = await fetch(
       "https://api.railyatri.in/redbus/source-city-list.json"
     );
-    // return { ...state, cities: await data.json().city_list };
     const citys = await data.json();
     console.log(citys.city_list);
-
     dispatch({ type: CITIES, value: citys.city_list });
   };
+
+  // const destCitys = async (id) => {
+  //   // const destData = await fetch(
+  //   //   `https://food1.railyatri.in/redbus/bus-destination-city.json?source_city_id=${id}`
+  //   // );
+  //   // const dCitys = await destData.json();
+  //   // dispatch({ type: DESTCITIES, value: dCitys.city_list });
+  // };
+
   const isEmpty = obj => {
     let valid = true;
     for (var key in obj) {
@@ -51,6 +61,7 @@ const GlobalState = props => {
     }
     return valid;
   };
+
   const getBusList = async () => {
     if (isEmpty(state.searchParams)) {
       const data = await fetch(
@@ -61,8 +72,20 @@ const GlobalState = props => {
       dispatch({ type: LIST, value: list });
     }
   };
+
   const onSelect = (option, type) => {
+    if (type === "f") {
+      destCitys(option.city_id)
+    }
     dispatch({ type: PARAMS, value: { option: option, type: type } });
+  };
+
+  const destCitys = async (id) => {
+    const destData = await fetch(
+      `https://food1.railyatri.in/redbus/bus-destination-city.json?source_city_id=${id}`
+    );
+    const dCitys = await destData.json();
+    dispatch({ type: DESTCITIES, value: dCitys.city_list });
   };
   const setQueryParams = params => {
     dispatch({
@@ -75,6 +98,7 @@ const GlobalState = props => {
       value={{
         searchParams: state.searchParams,
         cities: state.cities,
+        destcities: state.destcities,
         selectedDate: state.selectedDate,
         listing: state.listing,
         isLoading: state.isLoading,
