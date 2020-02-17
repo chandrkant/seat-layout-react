@@ -47,10 +47,14 @@ function Search(props) {
         <Autocomplete
           {...defaultProps}
           id="from-city"
-          // value={context.cities.find(
-          //   city => city.city_id === context.searchParams.fCode
-          // )}
+          defaultValue={{
+            city_name: context.searchParams.from,
+            city_id: context.searchParams.fCode
+          }}
           onChange={(event, newValue) => {
+            if (newValue === null) {
+              newValue = { city_name: "", city_id: "" };
+            }
             context.onSelect(newValue, "f");
           }}
           renderInput={params => (
@@ -67,11 +71,15 @@ function Search(props) {
           {...defaultProps}
           id="to-city"
           onChange={(event, newValue) => {
+            if (newValue === null) {
+              newValue = { city_name: "", city_id: "" };
+            }
             context.onSelect(newValue, "t");
           }}
-          // value={context.cities.find(
-          //   city => city.city_id === context.searchParams.tCode
-          // )}
+          defaultValue={{
+            city_name: context.searchParams.to,
+            city_id: context.searchParams.tCode
+          }}
           renderInput={params => (
             <TextField
               {...params}
