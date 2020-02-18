@@ -9,7 +9,8 @@ import {
   SET_DATE,
   LIST,
   LOADING,
-  QUERYPARAMS
+  QUERYPARAMS,
+  ALERTS
 } from "./Reducers";
 const init = {
   searchParams: {
@@ -23,8 +24,17 @@ const init = {
   cities: [],
   destcities: [],
   selectedDate: new Date(),
-  listing: { availableTrips: [] },
-  isLoading: true
+  listing: {
+    availableTrips: [],
+    smartBus: [],
+    nonSmartBus: [],
+    isSmartRoute: true,
+    currentTrip: {},
+    currentBp: {},
+    currentDp: {}
+  },
+  isLoading: true,
+  alert: { error: false, success: false, display: false }
 };
 const dateFormat = (date, f, Format = format) => {
   return Format(new Date(Date(date)), f);
@@ -34,24 +44,24 @@ const GlobalState = props => {
   const handleDateChange = date => {
     dispatch({ type: SET_DATE, value: date });
   };
+  const handleAlertClose = () => {
+    dispatch({
+      type: ALERTS,
+      value: { error: false, success: false, display: false }
+    });
+  };
 
+  //Get source city list
   const sourceCitys = async () => {
     const data = await fetch(
-      "https://api.railyatri.in/redbus/source-city-list.json"
+      "https://food1.railyatri.in/redbus/source-city-list.json"
     );
     const citys = await data.json();
     console.log(citys.city_list);
     dispatch({ type: CITIES, value: citys.city_list });
   };
 
-  // const destCitys = async (id) => {
-  //   // const destData = await fetch(
-  //   //   `https://food1.railyatri.in/redbus/bus-destination-city.json?source_city_id=${id}`
-  //   // );
-  //   // const dCitys = await destData.json();
-  //   // dispatch({ type: DESTCITIES, value: dCitys.city_list });
-  // };
-
+  //check object key has values
   const isEmpty = obj => {
     let valid = true;
     for (var key in obj) {
@@ -62,25 +72,64 @@ const GlobalState = props => {
     return valid;
   };
 
+  // get bus listing based on parameters
   const getBusList = async () => {
     if (isEmpty(state.searchParams)) {
+      restListing();
       const data = await fetch(
-        `https://test.railyatri.in/redbus/get-available-trips.json?source=${state.searchParams.fCode}&destination=${state.searchParams.tCode}&doj=${state.searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`
+        `https://food1.railyatri.in/redbus/get-available-trips.json?source=${state.searchParams.fCode}&destination=${state.searchParams.tCode}&doj=${state.searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`
       );
       const list = await data.json();
+      if (list.availableTrips.length > 0) {
+        dispatch({
+          type: ALERTS,
+          value: { error: false, success: true, display: true }
+        });
+        dispatch({
+          type: LIST,
+          value: {
+            ...list,
+            smartBus: list.availableTrips.filter(trip => trip.RY_smart_bus),
+            nonSmartBus: list.availableTrips.filter(trip => !trip.RY_smart_bus),
+            isSmartRoute: list.is_smart_route,
+            currentTrip: {},
+            currentBp: {},
+            currentDp: {}
+          }
+        });
+      } else {
+        dispatch({
+          type: ALERTS,
+          value: { error: true, success: false, display: true }
+        });
+      }
       dispatch({ type: LOADING, value: false });
-      dispatch({ type: LIST, value: list });
     }
   };
 
+  const restListing = () => {
+    dispatch({
+      type: LIST,
+      value: {
+        availableTrips: [],
+        smartBus: [],
+        nonSmartBus: [],
+        isSmartRoute: true,
+        currentTrip: {},
+        currentBp: {},
+        currentDp: {}
+      }
+    });
+  };
+
   const onSelect = (option, type) => {
-    if (type === "f") {
-      destCitys(option.city_id)
+    if (type === "f" && option.city_name.length > 0) {
+      destCitys(option.city_id);
     }
     dispatch({ type: PARAMS, value: { option: option, type: type } });
   };
 
-  const destCitys = async (id) => {
+  const destCitys = async id => {
     const destData = await fetch(
       `https://food1.railyatri.in/redbus/bus-destination-city.json?source_city_id=${id}`
     );
@@ -106,7 +155,9 @@ const GlobalState = props => {
         sourceCitys: sourceCitys,
         onSelect: onSelect,
         getBusList: getBusList,
-        setQueryParams: setQueryParams
+        setQueryParams: setQueryParams,
+        handleAlertClose: handleAlertClose,
+        alert: state.alert
       }}
     >
       {props.children}

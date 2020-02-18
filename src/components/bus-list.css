@@ -1,8 +1,14 @@
 li.intrcity-list_card {
-  background-color: #004b9e;
+  /* background-color: #004b9e; */
   padding: 0 15px 0 15px;
   display: inline-block;
   width: 100%;
+}
+div.intrcity-blk {
+  background-color: #004b9e;
+  width: 100%;
+  display: block;
+  padding: 2px 0 2px 0px;
 }
 li.intrcity-list_card .bus-card {
   background-color: #fff;

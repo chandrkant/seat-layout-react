@@ -15,9 +15,7 @@ function Search(props) {
     filterOptions: (options, state) => {
       if (state.inputValue.length > 1) {
         return options.filter(city => {
-          return city.city_name
-            .toLowerCase()
-            .startsWith(state.inputValue);
+          return city.city_name.toLowerCase().startsWith(state.inputValue);
         });
       } else {
         return [];
@@ -57,7 +55,7 @@ function Search(props) {
           options={context.cities}
           {...defaultProps}
           id="from-city"
-          defaultValue={{
+          value={{
             city_name: context.searchParams.from,
             city_id: context.searchParams.fCode
           }}
@@ -87,7 +85,7 @@ function Search(props) {
             }
             context.onSelect(newValue, "t");
           }}
-          defaultValue={{
+          value={{
             city_name: context.searchParams.to,
             city_id: context.searchParams.tCode
           }}

@@ -10,14 +10,23 @@ export default React.createContext({
     altDoj: format(new Date(), "MMM dd, yyyy")
   },
   cities: [],
-  destcities:[],
+  destcities: [],
   selectedDate: new Date(),
-  listing: { availableTrips: [] },
+  listing: {
+    smartBus: [],
+    nonSmartBus: [],
+    isSmartRoute: true,
+    currentTrip: {},
+    currentBp: {},
+    currentDp: {}
+  },
   isLoading: true,
+  alert: { error: false, success: false, display: false },
   handleDateChange: date => {},
   sourceCitys: () => {},
   onSelect: (option, type) => {},
   getBusList: props => {},
   getBuses: props => {},
-  destCitys: id=>{}
+  destCitys: id => {},
+  handleAlertClose: () => {}
 });

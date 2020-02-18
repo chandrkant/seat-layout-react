@@ -6,6 +6,7 @@ export const LIST = "LIST";
 export const LOADING = "LOADING";
 export const QUERYPARAMS = "QUERYPARAMS";
 export const DESTCITIES = "DESTCITIES";
+export const ALERTS = "ALERTS";
 const handleDateChange = (date, state) => {
   const params = {
     ...state.searchParams,
@@ -53,8 +54,10 @@ export const busReducer = (state, action) => {
       return { ...state, isLoading: action.value };
     case QUERYPARAMS:
       return { ...state, searchParams: action.value };
-    case DESTCITIES: 
-    return { ...state, destcities: action.value };
+    case DESTCITIES:
+      return { ...state, destcities: action.value };
+    case ALERTS:
+      return { ...state, alert: action.value };
     default:
       return state;
   }
