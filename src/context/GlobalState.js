@@ -12,7 +12,8 @@ import {
   QUERYPARAMS,
   ALERTS,
   CURRENTSTATE,
-  SETDATE
+  SETDATE,
+  OPENDROWER
 } from "./Reducers";
 const init = {
   searchParams: {
@@ -37,7 +38,8 @@ const init = {
   },
   currentState: 1,
   isLoading: true,
-  alert: { error: false, success: false, display: false }
+  alert: { error: false, success: false, display: false },
+  openDrower: false
 };
 const dateFormat = (date, f, Moment = moment) => {
   if (f.length === 0) {
@@ -57,14 +59,23 @@ const GlobalState = props => {
       value: { error: false, success: false, display: false }
     });
   };
+  const toggleDrawer = (event, open) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    dispatch({ type: OPENDROWER, value: open });
+  };
   const setCurrentState = st => {
     dispatch({ type: CURRENTSTATE, value: st });
   };
   //Get source city list
   const sourceCitys = async () => {
     const data = await fetch(
-      "https://food1.railyatri.in/redbus/source-city-list.json",
-      { cache: "reload" }
+      "https://food1.railyatri.in/redbus/source-city-list.json"
     );
     const citys = await data.json();
     console.log(citys.city_list);
@@ -88,8 +99,7 @@ const GlobalState = props => {
       dispatch({ type: LOADING, value: true });
       restListing();
       const data = await fetch(
-        `https://food1.railyatri.in/redbus/get-available-trips.json?source=${state.searchParams.fCode}&destination=${state.searchParams.tCode}&doj=${state.searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`,
-        { cache: "reload" }
+        `https://food1.railyatri.in/redbus/get-available-trips.json?source=${state.searchParams.fCode}&destination=${state.searchParams.tCode}&doj=${state.searchParams.doj}&device_type_id=4&is_new_reduce_basefare=1`
       );
       const list = await data.json();
       if (list.availableTrips.length > 0) {
@@ -143,8 +153,7 @@ const GlobalState = props => {
 
   const destCitys = async id => {
     const destData = await fetch(
-      `https://food1.railyatri.in/redbus/bus-destination-city.json?source_city_id=${id}`,
-      { cache: "reload" }
+      `https://food1.railyatri.in/redbus/bus-destination-city.json?source_city_id=${id}`
     );
     const dCitys = await destData.json();
     dispatch({ type: DESTCITIES, value: dCitys.city_list });
@@ -176,7 +185,9 @@ const GlobalState = props => {
         setQueryParams: setQueryParams,
         handleAlertClose: handleAlertClose,
         setCurrentState: setCurrentState,
-        alert: state.alert
+        alert: state.alert,
+        openDrower: state.openDrower,
+        toggleDrawer: toggleDrawer
       }}
     >
       {props.children}

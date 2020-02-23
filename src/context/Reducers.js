@@ -8,6 +8,7 @@ export const DESTCITIES = "DESTCITIES";
 export const ALERTS = "ALERTS";
 export const CURRENTSTATE = "CURRENTSTATE";
 export const SETDATE = "SETDATE";
+export const OPENDROWER = "OPENDROWER";
 const handleDateChange = (date, state) => {
   const params = {
     ...state.searchParams,
@@ -63,6 +64,8 @@ export const busReducer = (state, action) => {
       return { ...state, currentState: action.value };
     case SETDATE:
       return { ...state, selectedDate: action.value };
+    case OPENDROWER:
+      return { ...state, openDrower: action.value };
     default:
       return state;
   }

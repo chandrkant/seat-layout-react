@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles, Snackbar, Card, Grid } from "@material-ui/core";
+import { makeStyles, Snackbar, Card, Grid, Drawer } from "@material-ui/core";
 import BusContext from "../context/BusContext";
 import MuiAlert from "@material-ui/lab/Alert";
 import queryString from "query-string";
@@ -15,6 +15,11 @@ const useStyles = makeStyles({
     position: "relative",
     top: "5%",
     bottom: "2%"
+  },
+  tRoot: {
+    minWidth: 275,
+    margin: "10px",
+    padding: "15px"
   },
   troot: {
     minWidth: 275,
@@ -52,8 +57,7 @@ function BusListing(props) {
     context.searchParams.to,
     context.searchParams.doj
   ]);
-  console.log("Bus Listing");
-  const items = [1, 2, 3, 4, 5, 6];
+  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const classes = useStyles();
 
   return (
@@ -97,20 +101,28 @@ function BusListing(props) {
           {context.listing.availableTrips.length} Buses Found.
         </Alert>
       </Snackbar>
-      <div className="container-fluid">
-        {items.map(i => (
-          <div
-            className={classes.root}
-            key={i}
-            style={{ display: context.isLoading ? "block" : "none" }}
-          >
-            <Skeleton animation="wave" />
-            <Skeleton variant="rect" height={50} />
-            <Skeleton animation="wave" />
-            <Skeleton animation="wave" />
-          </div>
-        ))}
-      </div>
+      {context.isLoading ? (
+        <div className="intrcity-blk">
+          {items.map(i =>
+            i < 7 ? (
+              <Card
+                key={i}
+                className={classes.tRoot}
+                style={{ display: context.isLoading ? "block" : "none" }}
+              >
+                <Skeleton animation="wave" />
+                <Skeleton variant="rect" height={50} />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" />
+              </Card>
+            ) : (
+              ""
+            )
+          )}
+        </div>
+      ) : (
+        <div></div>
+      )}
       <div className="clearfix"></div>
       <div className="intrcity-blk">
         <ListCard {...props} buses={context.listing.smartBus}></ListCard>
@@ -159,9 +171,47 @@ function BusListing(props) {
             </div>
           </div>
         </Card>
-
+      </div>
+      {context.isLoading ? (
+        <div className="No-RY-blk">
+          {items.map(i =>
+            i > 6 ? (
+              <Card
+                key={i}
+                className={classes.tRoot}
+                style={{ display: context.isLoading ? "block" : "none" }}
+              >
+                <Skeleton animation="wave" />
+                <Skeleton variant="rect" height={50} />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" />
+              </Card>
+            ) : (
+              ""
+            )
+          )}
+        </div>
+      ) : (
+        <div></div>
+      )}
+      <div className="clearfix"></div>
+      <div className="No-RY-blk">
         <ListCard {...props} buses={context.listing.nonSmartBus}></ListCard>
       </div>
+      <Drawer
+        anchor="right"
+        transitionDuration={100}
+        open={context.openDrower}
+        onClose={event => context.toggleDrawer(event, false)}
+        onOpen={event => context.toggleDrawer(event, true)}
+      >
+        <Card className={classes.tRoot}>
+          <Skeleton animation="wave" />
+          <Skeleton variant="rect" height={50} />
+          <Skeleton animation="wave" />
+          <Skeleton animation="wave" />
+        </Card>
+      </Drawer>
     </React.Fragment>
   );
 }

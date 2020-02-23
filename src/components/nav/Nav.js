@@ -43,15 +43,17 @@ const useStyles = makeStyles(theme => ({
     color: "#fff",
     border: 0,
     outline: "none",
-    width: "25%",
-    top: "-5px"
+    width: "50%"
   },
   navTitle: {
-    marginTop: "0.5rem",
+    margin: "auto",
     flexGrow: 1
   },
   userLogo: {
-    marginLeft: "5rem"
+    margin: "auto"
+  },
+  multiinputBorder: {
+    borderBottom: "0 !important"
   }
 }));
 
@@ -91,7 +93,7 @@ export default function Nav(props) {
                   )}
                 </IconButton>
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={7} className={classes.navTitle}>
                 <Typography
                   variant="h6"
                   className={
@@ -122,11 +124,14 @@ export default function Nav(props) {
                   </p>
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4} className={classes.userLogo}>
                 {context.currentState === 2 ? (
                   <div className="arror-dates">
                     <ArrowBackIosIcon className={classes.iconSize} />
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <MuiPickersUtilsProvider
+                      utils={MomentUtils}
+                      className={classes.multiinputBorder}
+                    >
                       <DatePicker
                         className={classes.calVish}
                         format="DD MMM"
@@ -139,7 +144,7 @@ export default function Nav(props) {
                     <ArrowForwardIosIcon className={classes.iconSize} />
                   </div>
                 ) : (
-                  <AccountCircle className={classes.userLogo} />
+                  <AccountCircle />
                 )}
               </Grid>
             </Grid>

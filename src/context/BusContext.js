@@ -7,7 +7,7 @@ export default React.createContext({
     fCode: "",
     tCode: "",
     doj: format(new Date(), "dd-MM-yyyy"),
-    altDoj: format(new Date(), "MMM dd, yyyy")
+    altDoj: format(new Date(), "dd MMM")
   },
   cities: [],
   destcities: [],
@@ -23,6 +23,7 @@ export default React.createContext({
   currentState: 1,
   isLoading: true,
   alert: { error: false, success: false, display: false },
+  openDrower: false,
   handleDateChange: date => {},
   sourceCitys: () => {},
   onSelect: (option, type) => {},
@@ -30,5 +31,6 @@ export default React.createContext({
   getBuses: props => {},
   destCitys: id => {},
   handleAlertClose: () => {},
-  setCurrentState: st => {}
+  setCurrentState: st => {},
+  toggleDrawer: (event, open) => {}
 });

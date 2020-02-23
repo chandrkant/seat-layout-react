@@ -1,9 +1,20 @@
 .arror-dates {
-  margin-left: 5rem;
-  margin-top: 1rem;
+  float: right;
 }
 .arror-dates input {
   color: #fff;
   border: 0 !important;
   font-size: 1rem;
+  text-align: center;
+}
+h6 p {
+  margin: auto;
+}
+.arror-dates svg {
+  position: relative;
+  top: 6px;
+}
+.arror-dates .MuiInput-underline:before,
+.arror-dates .MuiInput-underline:after {
+  border-bottom: 0 !important;
 }
