@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import "bootstrap/dist/css/bootstrap.css";
+import "./components/global.css";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { format } from "date-fns";
@@ -48,7 +49,7 @@ function App(props) {
   return (
     <GlobalState>
       <React.Fragment>
-        <div>
+        <div className="main-section">
           <Nav></Nav>
           <Router>
             <div className="App">

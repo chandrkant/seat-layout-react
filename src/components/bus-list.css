@@ -1,3 +1,88 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 li.intrcity-list_card {
   /* background-color: #004b9e; */
   padding: 0 15px 0 15px;
@@ -10,6 +95,12 @@ div.intrcity-blk {
   display: block;
   padding: 2px 0 2px 0px;
 }
+div.No-RY-blk {
+  width: 100%;
+  display: block;
+  padding: 2px 0 2px 0px;
+  background: #eee;
+}
 li.intrcity-list_card .bus-card {
   background-color: #fff;
   border-radius: 3px;
@@ -19,4 +110,171 @@ li.intrcity-list_card .bus-card {
 }
 .shadow {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.26);
+}
+.black-txt {
+  color: #000;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.intrcity_title {
+  padding: 0 0 5px 0;
+}
+ul li.intrcity-list_card .bus-card {
+  background-color: #fff;
+  border-radius: 3px;
+  padding: 10px 15px 15px 15px;
+  float: left;
+  width: 100%;
+}
+.l-grey {
+  color: #757575;
+}
+.fs11 {
+  font-size: 11px;
+}
+.intrcity-list_card-time {
+  background: url(https://images.railyatri.in/ry_images_prod/Component-1-1574319554.png)
+    1% 0 no-repeat;
+  background-size: 8px;
+  background-position: 10px 5px;
+  padding: 0 0 0 25px;
+}
+.bus-line .bus-deptime {
+  font-weight: 500;
+  color: #000;
+  font-size: 16px;
+  padding-top: 10px;
+}
+.bus-line .bus-arrtime {
+  padding: 5px 0;
+}
+.bus-line .bus-arrtime {
+  font-size: 12px;
+}
+.no-padlt {
+  padding-left: 0;
+}
+.pickup-pop {
+  padding-top: 10px;
+  border-top: 1px dashed #d5d6d9;
+}
+.pickup-pop .pickup-popLT,
+.pickup-pop .fa-angle-down {
+  color: #0169d1;
+}
+.fx-wid {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+.board_caret {
+  font-size: 13px;
+  color: #000;
+  width: 9px;
+  opacity: 0.9;
+}
+.font-sm {
+  font-size: 16px;
+}
+.pad-rt-10 {
+  padding-right: 10px;
+}
+.more-bus_list-head {
+  background-color: #2e2d2d;
+  border-radius: 3px;
+  padding: 15px 15px 15px 0;
+  /* margin-top: 1em; */
+  background: #2e2d2d 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #0000004d;
+}
+.font-sm {
+  font-size: 16px;
+}
+.font-sm {
+  font-size: 16px;
+}
+.white-txt {
+  color: #fff;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.more-bus_list-head a.active-tab {
+  color: #fff;
+  font-weight: 500;
+}
+.more-bus_list-head .tab-optn {
+  display: inline-table;
+  background: #636262;
+  border-radius: 4px;
+  padding: 8px 2px;
+  width: 45%;
+  text-align: center;
+  font-size: 12px;
+  color: #c7c7c7;
+}
+.more-bus_list-head .tab-optn {
+  display: inline-table;
+  background: #636262;
+  border-radius: 4px;
+  padding: 8px 2px;
+  width: 45%;
+  text-align: center;
+  font-size: 12px;
+  color: #c7c7c7;
+}
+.No-RY-blk .row {
+  margin-right: 0;
+  margin-left: 0;
+}
+.bus-orgprice span.strikethrough:before {
+  border-top: 1px solid #ff0000;
+}
+.bus-orgprice span.strikethrough:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 45%;
+  right: 0;
+  border-top: 1px solid #ff4b4b;
+  -webkit-transform: rotate(10deg);
+  -moz-transform: rotate(10deg);
+  -ms-transform: rotate(10deg);
+  -o-transform: rotate(10deg);
+  transform: rotate(10deg);
+}
+.bus-orgprice span.strikethrough {
+  position: relative;
+  display: inline-block;
+  font-size: 12px;
+}
+.bus-model span {
+  color: #8a8a8a;
+  border: 1px solid #8a8a8a;
+  font-size: 9px;
+  padding: 2px 3px;
+  margin-right: 4px;
+  border-radius: 3px;
+}
+.bus-ry_details .bus-ry_score .bus-ry_seats {
+  margin-left: 5px;
+}
+.intrcity-top .logo img {
+  width: 228px;
+  padding-bottom: 15px;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+.intrcity-top .promo img {
+  padding-bottom: 15px;
+}
+.intrcity-top {
+  background: #004b9e;
+  float: left;
+  width: 100%;
+  /* margin-top: 3.4rem; */
 }

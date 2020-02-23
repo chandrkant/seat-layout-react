@@ -1,13 +1,11 @@
 import React, { useEffect, useContext } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Snackbar, Card, Grid } from "@material-ui/core";
 import BusContext from "../context/BusContext";
-import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import queryString from "query-string";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import "./bus-list.css";
+import ListCard from "./ListCard";
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -42,17 +40,45 @@ function BusListing(props) {
   const search = queryString.parse(props.location.search);
   const params = { ...search, ...props.match.params };
   useEffect(() => {
-    if (context.searchParams.from.length === 0) {
-      context.setQueryParams(params);
+    if (context.currentState !== 3) {
+      if (context.searchParams.from.length === 0) {
+        context.setQueryParams(params);
+      }
+      context.setCurrentState(2);
+      context.getBusList();
     }
-    context.getBusList();
-  }, [context.searchParams.from, context.searchParams.to]);
+  }, [
+    context.searchParams.from,
+    context.searchParams.to,
+    context.searchParams.doj
+  ]);
   console.log("Bus Listing");
   const items = [1, 2, 3, 4, 5, 6];
   const classes = useStyles();
 
   return (
     <React.Fragment>
+      <div className="intrcity-top">
+        <Grid container spacing={0} className="logo">
+          <img
+            alt=""
+            width=""
+            height=""
+            src="https://images.railyatri.in/ry_images_prod/intrcity-logo-1569326536.png"
+            className="img-responsive"
+          />
+        </Grid>
+        <Grid container spacing={0} className="promo">
+          <img
+            alt=""
+            width=""
+            height=""
+            src="https://images.railyatri.in/ry_images_prod/Presenting-1568111143.png"
+            className="img-responsive"
+          />
+        </Grid>
+      </div>
+
       <Snackbar
         open={context.alert.success && context.alert.display}
         autoHideDuration={6000}
@@ -87,18 +113,54 @@ function BusListing(props) {
       </div>
       <div className="clearfix"></div>
       <div className="intrcity-blk">
-        {context.listing.smartBus.map(bus => (
-          <Card key={bus.id} className={classes.troot}>
-            <CardContent>{bus.travels}</CardContent>
-          </Card>
-        ))}
+        <ListCard {...props} buses={context.listing.smartBus}></ListCard>
       </div>
       <div className="No-RY-blk">
-        {context.listing.nonSmartBus.map(bus => (
-          <Card key={bus.id} className={classes.troot}>
-            <CardContent>{bus.travels}</CardContent>
-          </Card>
-        ))}
+        <Card className={classes.troot}>
+          <div className="col-xs-12 shadow more-bus_list-head">
+            <div className="row">
+              <div className="col-xs-3 no-pad">
+                <p className="no-marg white-txt oth-bs-cot font-sm fw-500">
+                  {context.listing.nonSmartBus.length}
+                </p>
+                <p className="font-xxs" style={{ color: "rgb(153, 153, 153)" }}>
+                  Other Buses
+                </p>
+                <p></p>
+              </div>
+              <div className="col-xs-9 no-pad">
+                <div className="sort-tab text-right">
+                  <a
+                    className="tab-optn active-tab"
+                    style={{ marginRight: "3px" }}
+                  >
+                    Price
+                    <i
+                      aria-hidden="true"
+                      className="fa fa-sort-amount-asc fs10 sort-itm"
+                    ></i>
+                  </a>
+                  <a className="tab-optn">
+                    Departure
+                    <i
+                      aria-hidden="true"
+                      className="fa fa-sort-amount-asc sort-itm"
+                    ></i>
+                  </a>
+                  <a className="tab-optn hide">
+                    Duration{" "}
+                    <i
+                      aria-hidden="true"
+                      className="fa fa-sort-amount-asc sort-itm"
+                    ></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <ListCard {...props} buses={context.listing.nonSmartBus}></ListCard>
       </div>
     </React.Fragment>
   );

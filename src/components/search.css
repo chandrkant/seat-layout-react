@@ -1,0 +1,30 @@
+.search-block-2 {
+  border-radius: 4px;
+  padding: 10px 0 15px 0;
+  width: 100%;
+  background: #fff;
+  display: inline-block;
+  box-shadow: 0 2px 5px 2px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  position: relative;
+}
+.search-contener {
+  margin: 10px;
+}
+.search-block .submit-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  border: 0;
+  background-color: #2196f3;
+}
+.search-block .search-btn {
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #74b202;
+  border: 1px solid #86bc24;
+  transition: 0.3s;
+}

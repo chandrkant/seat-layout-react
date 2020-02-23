@@ -1,104 +1,151 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
+import React, { useContext } from "react";
+import {
+  IconButton,
+  AppBar,
+  Toolbar,
+  Typography,
+  makeStyles,
+  Grid
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-
+import BusContext from "../../context/BusContext";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+// import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import "./nav.css";
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    background: "#004b9e"
+  },
+  navBack: {
+    background: "#004F9E",
+    minHeight: "60px"
   },
   menuButton: {
     marginRight: theme.spacing(2)
   },
   title: {
     flexGrow: 1
+  },
+  ryLogo: {
+    maxWidth: "205px"
+  },
+  iconSize: {
+    fontSize: "1rem",
+    height: "0.9rem"
+  },
+  calVish: {
+    color: "#fff",
+    border: 0,
+    outline: "none",
+    width: "25%",
+    top: "-5px"
+  },
+  navTitle: {
+    marginTop: "0.5rem",
+    flexGrow: 1
+  },
+  userLogo: {
+    marginLeft: "5rem"
   }
 }));
 
 export default function Nav(props) {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
+  const context = useContext(BusContext);
   const handleChange = event => {
-    setAuth(event.target.checked);
+    // setAuth(event.target.checked);
   };
 
   const handleMenu = event => {
-    setAnchorEl(event.currentTarget);
+    // setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    // setAnchorEl(null);
   };
 
   return (
-    <div className={classes.root}>
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? "Logout" : "Login"}
-        />
-      </FormGroup> */}
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            IntrCity.com
-          </Typography>
-          {auth && (
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>IntrCIty.com</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
+    <React.Fragment>
+      <div className={classes.root}>
+        <AppBar position="fixed" className={classes.navBack}>
+          <Toolbar>
+            <Grid container spacing={0}>
+              <Grid item xs={1}>
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={e => window.history.back(-1)}
+                >
+                  {context.currentState === 1 ? (
+                    <MenuIcon />
+                  ) : (
+                    <ArrowBackIcon />
+                  )}
+                </IconButton>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography
+                  variant="h6"
+                  className={
+                    context.currentState === 1 ? classes.navTitle : "hide"
+                  }
+                >
+                  <img
+                    className={classes.ryLogo}
+                    alt="railyatri logo icon"
+                    width="270px"
+                    src="https://images.railyatri.in/ry_images_prod/smartbus-logo-1579152662.png"
+                  ></img>
+                </Typography>
+                <Typography
+                  variant="h6"
+                  className={
+                    context.currentState === 2 ? classes.navTitle : "hide"
+                  }
+                >
+                  <p>
+                    <span className="title-case">
+                      {context.searchParams.from}
+                    </span>{" "}
+                    <span className="arrow-forw">-</span>{" "}
+                    <span className="title-case">
+                      {context.searchParams.to}
+                    </span>
+                  </p>
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                {context.currentState === 2 ? (
+                  <div className="arror-dates">
+                    <ArrowBackIosIcon className={classes.iconSize} />
+                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                      <DatePicker
+                        className={classes.calVish}
+                        format="DD MMM"
+                        value={context.selectedDate}
+                        onChange={context.handleDateChange.bind(this)}
+                        minDate={new Date()}
+                        autoOk
+                      />
+                    </MuiPickersUtilsProvider>
+                    <ArrowForwardIosIcon className={classes.iconSize} />
+                  </div>
+                ) : (
+                  <AccountCircle className={classes.userLogo} />
+                )}
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+      </div>
+    </React.Fragment>
   );
 }

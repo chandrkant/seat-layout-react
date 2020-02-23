@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 export const PARAMS = "PARAMS";
 export const CITIES = "CITIES";
 export const SET_DATE = "SET_DATE";
@@ -7,11 +6,13 @@ export const LOADING = "LOADING";
 export const QUERYPARAMS = "QUERYPARAMS";
 export const DESTCITIES = "DESTCITIES";
 export const ALERTS = "ALERTS";
+export const CURRENTSTATE = "CURRENTSTATE";
+export const SETDATE = "SETDATE";
 const handleDateChange = (date, state) => {
   const params = {
     ...state.searchParams,
-    doj: format(date, "dd-MM-yyyy"),
-    altDoj: format(date, "MMM dd, yyyy")
+    doj: date.format("DD-MM-YYYY"),
+    altDoj: date.format("DD MMM")
   };
   const selectedDate = date;
   return { ...state, searchParams: params, selectedDate: selectedDate };
@@ -58,6 +59,10 @@ export const busReducer = (state, action) => {
       return { ...state, destcities: action.value };
     case ALERTS:
       return { ...state, alert: action.value };
+    case CURRENTSTATE:
+      return { ...state, currentState: action.value };
+    case SETDATE:
+      return { ...state, selectedDate: action.value };
     default:
       return state;
   }

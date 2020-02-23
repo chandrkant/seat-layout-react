@@ -1,14 +1,22 @@
 import React, { useEffect, useContext } from "react";
-import TextField from "@material-ui/core/TextField";
+import { TextField, Grid, Card, makeStyles } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import Grid from "@material-ui/core/Grid";
-import DateFnsUtils from "@date-io/date-fns";
+// import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
 import BusContext from "../context/BusContext";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
+import "./search.css";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+const useStyles = makeStyles({
+  root: {
+    minWidth: 275,
+    margin: "10px",
+    padding: "15px",
+    borderRadius: "4px",
+    boxShadow: "0 2px 5px 2px rgba(0, 0, 0, 0.1)"
+  }
+});
 function Search(props) {
+  const classes = useStyles();
   const context = useContext(BusContext);
   const defaultProps = {
     getOptionLabel: option => option.city_name,
@@ -45,85 +53,90 @@ function Search(props) {
 
   useEffect(() => {
     console.log(context);
+    context.setCurrentState(1);
     context.sourceCitys();
   }, []);
 
   return (
     <React.Fragment>
-      <div className="container-fluid">
-        <Autocomplete
-          options={context.cities}
-          {...defaultProps}
-          id="from-city"
-          value={{
-            city_name: context.searchParams.from,
-            city_id: context.searchParams.fCode
-          }}
-          onChange={(event, newValue) => {
-            if (newValue === null) {
-              newValue = { city_name: "", city_id: "" };
-            }
-            context.onSelect(newValue, "f");
-          }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="From City"
-              margin="normal"
-              name="from_city"
-              fullWidth
+      <Card className={classes.root}>
+        <div className="search-block">
+          <div className="search-contener">
+            <Autocomplete
+              options={context.cities}
+              {...defaultProps}
+              id="from-city"
+              value={{
+                city_name: context.searchParams.from,
+                city_id: context.searchParams.fCode
+              }}
+              onChange={(event, newValue) => {
+                if (newValue === null) {
+                  newValue = { city_name: "", city_id: "" };
+                }
+                context.onSelect(newValue, "f");
+              }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="From City"
+                  margin="normal"
+                  name="from_city"
+                  fullWidth
+                />
+              )}
             />
-          )}
-        />
-        <Autocomplete
-          options={context.destcities}
-          {...defaultProps}
-          id="to-city"
-          onChange={(event, newValue) => {
-            if (newValue === null) {
-              newValue = { city_name: "", city_id: "" };
-            }
-            context.onSelect(newValue, "t");
-          }}
-          value={{
-            city_name: context.searchParams.to,
-            city_id: context.searchParams.tCode
-          }}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="To City"
-              margin="normal"
-              name="to_city"
-              fullWidth
+            <Autocomplete
+              options={context.destcities}
+              {...defaultProps}
+              id="to-city"
+              onChange={(event, newValue) => {
+                if (newValue === null) {
+                  newValue = { city_name: "", city_id: "" };
+                }
+                context.onSelect(newValue, "t");
+              }}
+              value={{
+                city_name: context.searchParams.to,
+                city_id: context.searchParams.tCode
+              }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="To City"
+                  margin="normal"
+                  name="to_city"
+                  fullWidth
+                />
+              )}
             />
-          )}
-        />
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container justify="space-around">
-            <KeyboardDatePicker
-              margin="normal"
-              id="date-picker-dialog"
-              label="Date picker dialog"
-              format="MMM dd, yyyy"
-              value={context.selectedDate}
-              onChange={context.handleDateChange.bind(this)}
-              minDate={new Date()}
-              clearable
-              fullWidth
-            />
-          </Grid>
-        </MuiPickersUtilsProvider>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <Grid container justify="space-around">
+                <DatePicker
+                  margin="normal"
+                  id="date-picker-dialog"
+                  label="Date picker dialog"
+                  format="MMM DD, YYYY"
+                  value={context.selectedDate}
+                  onChange={context.handleDateChange.bind(this)}
+                  minDate={new Date()}
+                  clearable
+                  fullWidth
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
 
-        <div className="">
-          <button
-            className="btn btn-primary btn-block"
-            onClick={() => getBuses(props)}
-          >
-            SEARCH
-          </button>
+            <div className="">
+              <button
+                className="btn btn-primary btn-block search-btn"
+                onClick={() => getBuses(props)}
+              >
+                SEARCH
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </Card>
     </React.Fragment>
   );
 }

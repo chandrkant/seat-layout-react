@@ -20,6 +20,7 @@ export default React.createContext({
     currentBp: {},
     currentDp: {}
   },
+  currentState: 1,
   isLoading: true,
   alert: { error: false, success: false, display: false },
   handleDateChange: date => {},
@@ -28,5 +29,6 @@ export default React.createContext({
   getBusList: props => {},
   getBuses: props => {},
   destCitys: id => {},
-  handleAlertClose: () => {}
+  handleAlertClose: () => {},
+  setCurrentState: st => {}
 });
