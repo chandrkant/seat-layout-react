@@ -25,6 +25,14 @@ const useStyles = makeStyles({
     minWidth: 275,
     margin: "10px"
   },
+  transformCard: {
+    minWidth: 275,
+    margin: "10px",
+    transition: "transform 1s",
+    transformStyle: "preserve-3d",
+    cursor: "pointer",
+    position: "relative"
+  },
   bullet: {
     display: "inline-block",
     margin: "0 2px",
@@ -45,7 +53,12 @@ function BusListing(props) {
   const search = queryString.parse(props.location.search);
   const params = { ...search, ...props.match.params };
   console.log("Bus Loading");
-
+  const flipCard = () => {
+    var card = document.querySelector(".card");
+    card.addEventListener("click", function() {
+      card.classList.toggle("is-flipped");
+    });
+  };
   useEffect(() => {
     context.setCurrentState(2);
     if (context.currentState !== 3) {
@@ -207,12 +220,24 @@ function BusListing(props) {
         onClose={context.toggleDrawer(false)}
         // onOpen={event => context.toggleDrawer(event, true)}
       >
-        <Card className={classes.tRoot}>
-          <Skeleton animation="wave" />
-          <Skeleton variant="rect" height={50} />
-          <Skeleton animation="wave" />
-          <Skeleton animation="wave" />
-        </Card>
+        <div className="card">
+          <div className="card__face card__face--front">
+            <Card className={classes.tRoot} onClick={flipCard}>
+              <Skeleton animation="wave" />
+              <Skeleton variant="rect" height={50} />
+              <Skeleton animation="wave" />
+              <Skeleton animation="wave" />
+            </Card>
+          </div>
+          <div className="card__face card__face--back" onClick={flipCard}>
+            <Card className={classes.tRoot}>
+              <Skeleton animation="wave" />
+              <Skeleton variant="rect" height={50} />
+              <Skeleton animation="wave" />
+              <Skeleton animation="wave" />
+            </Card>
+          </div>
+        </div>
       </Drawer>
     </React.Fragment>
   );
