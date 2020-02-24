@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
+import CloseIcon from '@material-ui/icons/Close';
 import {
   makeStyles,
   Snackbar,
@@ -85,6 +86,7 @@ function BusListing(props) {
   const classes = useStyles();
   const goToSeatLayout = (props, id) => {
     context.setCurrentState(2);
+    context.toggleDrawer(context.currentTrip, false);
     props.history.push(`/seat-layout/${id}`);
   };
   return (
@@ -231,55 +233,62 @@ function BusListing(props) {
         open={context.openDrower}
         onClose={context.toggleDrawer(context.currentTrip, false)}
         // onOpen={event => context.toggleDrawer(event, true)}
-      ><div className="scene scene--card">
-        <div className="card">
-          <div className="card__face card__face--front">
-            <Card className={classes.tRoot} onClick={flipCard}>
-              <label>Boarding Points</label>
-              <RadioGroup
-                defaultValue={
-                  context.currentTrip.boardingTimes.length > 0
-                    ? context.currentTrip.boardingTimes[0].bpId
-                    : ""
-                }
-                name="bp_name"
-              >
-                {context.currentTrip.boardingTimes.map(bp => (
-                  <FormControlLabel
-                    value={bp.bpId}
-                    control={<Radio color="primary" />}
-                    label={bp.bpName}
-                    labelPlacement="end"
-                    key={bp.bpId}
-                  />
-                ))}
-              </RadioGroup>
-            </Card>
+      >
+      <div className="pull-right">
+        <CloseIcon onClick={context.toggleDrawer(context.currentTrip, false)}/>
+      </div>
+        <div className="scene scene--card">
+          <div className="card">
+            <div className="card__face card__face--front">
+              <Card className={classes.tRoot} onClick={flipCard}>
+                <label>Boarding Points</label>
+                <RadioGroup
+                  defaultValue={
+                    context.currentTrip.boardingTimes.length > 0
+                      ? context.currentTrip.boardingTimes[0].bpId
+                      : ""
+                  }
+                  name="bp_name"
+                >
+                  {context.currentTrip.boardingTimes.map(bp => (
+                    <FormControlLabel
+                      value={bp.bpId}
+                      control={<Radio color="primary" />}
+                      label={bp.bpName}
+                      labelPlacement="end"
+                      key={bp.bpId}
+                    />
+                  ))}
+                </RadioGroup>
+              </Card>
+            </div>
+            <div
+              className="card__face card__face--back"
+              onClick={() => goToSeatLayout(props, context.currentTrip.id)}
+            >
+              <Card className={classes.tRoot}>
+                <label>Droping Points</label>
+                <RadioGroup
+                  defaultValue={
+                    context.currentTrip.droppingTimes.length > 0
+                      ? context.currentTrip.droppingTimes[0].bpId
+                      : ""
+                  }
+                  name="bp_name"
+                >
+                  {context.currentTrip.droppingTimes.map(dp => (
+                    <FormControlLabel
+                      value={dp.bpId}
+                      control={<Radio color="primary" />}
+                      label={dp.bpName}
+                      labelPlacement="end"
+                      key={dp.bpId}
+                    />
+                  ))}
+                </RadioGroup>
+              </Card>
+            </div>
           </div>
-          <div className="card__face card__face--back" onClick={()=>goToSeatLayout(props,context.currentTrip.id)}>
-            <Card className={classes.tRoot}>
-              <label>Droping Points</label>
-              <RadioGroup
-                defaultValue={
-                  context.currentTrip.droppingTimes.length > 0
-                    ? context.currentTrip.droppingTimes[0].bpId
-                    : ""
-                }
-                name="bp_name"
-              >
-                {context.currentTrip.droppingTimes.map(dp => (
-                  <FormControlLabel
-                    value={dp.bpId}
-                    control={<Radio color="primary" />}
-                    label={dp.bpName}
-                    labelPlacement="end"
-                    key={dp.bpId}
-                  />
-                ))}
-              </RadioGroup>
-            </Card>
-          </div>
-        </div>
         </div>
       </Drawer>
     </React.Fragment>
