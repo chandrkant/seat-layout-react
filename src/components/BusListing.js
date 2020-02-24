@@ -1,6 +1,15 @@
 import React, { useEffect, useContext } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles, Snackbar, Card, Grid, Drawer } from "@material-ui/core";
+import {
+  makeStyles,
+  Snackbar,
+  Card,
+  Grid,
+  Drawer,
+  FormControlLabel,
+  Radio,
+  RadioGroup
+} from "@material-ui/core";
 import BusContext from "../context/BusContext";
 import MuiAlert from "@material-ui/lab/Alert";
 import queryString from "query-string";
@@ -74,7 +83,10 @@ function BusListing(props) {
   ]);
   const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const classes = useStyles();
-
+  const goToSeatLayout = (props, id) => {
+    context.setCurrentState(2);
+    props.history.push(`/seat-layout/${id}`);
+  };
   return (
     <React.Fragment>
       <div className="intrcity-top">
@@ -217,26 +229,57 @@ function BusListing(props) {
         anchor="right"
         transitionDuration={500}
         open={context.openDrower}
-        onClose={context.toggleDrawer(false)}
+        onClose={context.toggleDrawer(context.currentTrip, false)}
         // onOpen={event => context.toggleDrawer(event, true)}
-      >
+      ><div className="scene scene--card">
         <div className="card">
           <div className="card__face card__face--front">
             <Card className={classes.tRoot} onClick={flipCard}>
-              <Skeleton animation="wave" />
-              <Skeleton variant="rect" height={50} />
-              <Skeleton animation="wave" />
-              <Skeleton animation="wave" />
+              <label>Boarding Points</label>
+              <RadioGroup
+                defaultValue={
+                  context.currentTrip.boardingTimes.length > 0
+                    ? context.currentTrip.boardingTimes[0].bpId
+                    : ""
+                }
+                name="bp_name"
+              >
+                {context.currentTrip.boardingTimes.map(bp => (
+                  <FormControlLabel
+                    value={bp.bpId}
+                    control={<Radio color="primary" />}
+                    label={bp.bpName}
+                    labelPlacement="end"
+                    key={bp.bpId}
+                  />
+                ))}
+              </RadioGroup>
             </Card>
           </div>
-          <div className="card__face card__face--back" onClick={flipCard}>
+          <div className="card__face card__face--back" onClick={()=>goToSeatLayout(props,context.currentTrip.id)}>
             <Card className={classes.tRoot}>
-              <Skeleton animation="wave" />
-              <Skeleton variant="rect" height={50} />
-              <Skeleton animation="wave" />
-              <Skeleton animation="wave" />
+              <label>Droping Points</label>
+              <RadioGroup
+                defaultValue={
+                  context.currentTrip.droppingTimes.length > 0
+                    ? context.currentTrip.droppingTimes[0].bpId
+                    : ""
+                }
+                name="bp_name"
+              >
+                {context.currentTrip.droppingTimes.map(dp => (
+                  <FormControlLabel
+                    value={dp.bpId}
+                    control={<Radio color="primary" />}
+                    label={dp.bpName}
+                    labelPlacement="end"
+                    key={dp.bpId}
+                  />
+                ))}
+              </RadioGroup>
             </Card>
           </div>
+        </div>
         </div>
       </Drawer>
     </React.Fragment>

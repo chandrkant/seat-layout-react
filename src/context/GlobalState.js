@@ -13,7 +13,8 @@ import {
   ALERTS,
   CURRENTSTATE,
   SETDATE,
-  OPENDROWER
+  OPENDROWER,
+  TRIP
 } from "./Reducers";
 const init = {
   searchParams: {
@@ -31,11 +32,11 @@ const init = {
     availableTrips: [],
     smartBus: [],
     nonSmartBus: [],
-    isSmartRoute: true,
-    currentTrip: {},
-    currentBp: {},
-    currentDp: {}
+    isSmartRoute: true
   },
+  currentTrip: {cancellationPolicy:[],boardingTimes:[],droppingTimes:[],fareDetails:[]},
+  currentBp: {},
+  currentDp: {},
   currentState: 1,
   isLoading: true,
   alert: { error: false, success: false, display: false },
@@ -59,7 +60,7 @@ const GlobalState = props => {
       value: { error: false, success: false, display: false }
     });
   };
-  const toggleDrawer = open => event => {
+  const toggleDrawer = (bus = {}, open) => event => {
     if (
       event &&
       event.type === "keydown" &&
@@ -67,6 +68,7 @@ const GlobalState = props => {
     ) {
       return;
     }
+    dispatch({ type: TRIP, value: bus });
     dispatch({ type: OPENDROWER, value: open });
   };
   const setCurrentState = st => {
@@ -109,10 +111,7 @@ const GlobalState = props => {
             ...list,
             smartBus: list.availableTrips.filter(trip => trip.RY_smart_bus),
             nonSmartBus: list.availableTrips.filter(trip => !trip.RY_smart_bus),
-            isSmartRoute: list.is_smart_route,
-            currentTrip: {},
-            currentBp: {},
-            currentDp: {}
+            isSmartRoute: list.is_smart_route
           }
         });
         dispatch({
@@ -136,10 +135,7 @@ const GlobalState = props => {
         availableTrips: [],
         smartBus: [],
         nonSmartBus: [],
-        isSmartRoute: true,
-        currentTrip: {},
-        currentBp: {},
-        currentDp: {}
+        isSmartRoute: true
       }
     });
   };
@@ -176,6 +172,9 @@ const GlobalState = props => {
         destcities: state.destcities,
         selectedDate: state.selectedDate,
         listing: state.listing,
+        currentTrip: state.currentTrip,
+        currentBp: state.currentBp,
+        currentDp: state.currentDp,
         isLoading: state.isLoading,
         currentState: state.currentState,
         handleDateChange: handleDateChange,

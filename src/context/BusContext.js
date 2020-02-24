@@ -15,11 +15,12 @@ export default React.createContext({
   listing: {
     smartBus: [],
     nonSmartBus: [],
-    isSmartRoute: true,
-    currentTrip: {},
-    currentBp: {},
-    currentDp: {}
+    isSmartRoute: true
+    
   },
+  currentTrip: {cancellationPolicy:[],boardingTimes:[],droppingTimes:[],fareDetails:[]},
+  currentBp: {},
+  currentDp: {},
   currentState: 1,
   isLoading: true,
   alert: { error: false, success: false, display: false },

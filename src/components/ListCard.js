@@ -56,10 +56,6 @@ const useStyles = makeStyles({
 function ListCard(props) {
   const classes = useStyles();
   const context = useContext(BusContext);
-  const goToSeatLayout = (props, id) => {
-    context.setCurrentState(2);
-    props.history.push(`/seat-layout/${id}`);
-  };
   return (
     <React.Fragment>
       <div>
@@ -67,7 +63,7 @@ function ListCard(props) {
           <Card
             key={bus.id}
             className={classes.troot}
-            onClick={context.toggleDrawer(true)} //goToSeatLayout(props, bus.id)}
+            onClick={context.toggleDrawer(bus, true)} //goToSeatLayout(props, bus.id)}
           >
             <Grid container spacing={0}>
               <Grid item xs={10} className={classes.gridPad}>
