@@ -3,12 +3,17 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./components/global.css";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { format } from "date-fns";
 import SeatLayout from "./components/SeatLayout";
 import Search from "./components/Search";
 import BusListing from "./components/BusListing";
 import Nav from "./components/nav/Nav";
 import GlobalState from "./context/GlobalState";
+if (process.env.NODE_ENV === "development") {
+  const whyDidYouRender = require("@welldone-software/why-did-you-render");
+  whyDidYouRender(React, {
+    trackAllPureComponents: true
+  });
+}
 // const init = () => {
 //   return {
 //     seats: [],

@@ -44,12 +44,14 @@ function BusListing(props) {
   const context = useContext(BusContext);
   const search = queryString.parse(props.location.search);
   const params = { ...search, ...props.match.params };
+  console.log("Bus Loading");
+
   useEffect(() => {
+    context.setCurrentState(2);
     if (context.currentState !== 3) {
       if (context.searchParams.from.length === 0) {
         context.setQueryParams(params);
       }
-      context.setCurrentState(2);
       context.getBusList();
     }
   }, [
@@ -200,10 +202,10 @@ function BusListing(props) {
       </div>
       <Drawer
         anchor="right"
-        transitionDuration={100}
+        transitionDuration={500}
         open={context.openDrower}
-        onClose={event => context.toggleDrawer(event, false)}
-        onOpen={event => context.toggleDrawer(event, true)}
+        onClose={context.toggleDrawer(false)}
+        // onOpen={event => context.toggleDrawer(event, true)}
       >
         <Card className={classes.tRoot}>
           <Skeleton animation="wave" />
@@ -215,4 +217,5 @@ function BusListing(props) {
     </React.Fragment>
   );
 }
-export default BusListing;
+export default React.memo(BusListing);
+BusListing.whyDidYouRender = true;

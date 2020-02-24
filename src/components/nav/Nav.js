@@ -60,17 +60,17 @@ const useStyles = makeStyles(theme => ({
 export default function Nav(props) {
   const classes = useStyles();
   const context = useContext(BusContext);
-  const handleChange = event => {
-    // setAuth(event.target.checked);
-  };
+  // const handleChange = event => {
+  //   // setAuth(event.target.checked);
+  // };
 
-  const handleMenu = event => {
-    // setAnchorEl(event.currentTarget);
-  };
+  // const handleMenu = event => {
+  //   // setAnchorEl(event.currentTarget);
+  // };
 
-  const handleClose = () => {
-    // setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   // setAnchorEl(null);
+  // };
 
   return (
     <React.Fragment>

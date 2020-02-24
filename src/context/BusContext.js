@@ -23,14 +23,14 @@ export default React.createContext({
   currentState: 1,
   isLoading: true,
   alert: { error: false, success: false, display: false },
-  openDrower: false,
-  handleDateChange: date => {},
-  sourceCitys: () => {},
-  onSelect: (option, type) => {},
-  getBusList: props => {},
-  getBuses: props => {},
-  destCitys: id => {},
-  handleAlertClose: () => {},
-  setCurrentState: st => {},
-  toggleDrawer: (event, open) => {}
+  openDrower: false
+  // handleDateChange: date => {},
+  // sourceCitys: () => {},
+  // onSelect: (option, type) => {},
+  // getBusList: props => {},
+  // getBuses: props => {},
+  // destCitys: id => {},
+  // handleAlertClose: () => {},
+  // setCurrentState: st => {},
+  // toggleDrawer: (event, open) => {}
 });

@@ -52,7 +52,6 @@ function Search(props) {
   };
 
   useEffect(() => {
-    console.log(context);
     context.setCurrentState(1);
     context.sourceCitys();
   }, []);

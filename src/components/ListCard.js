@@ -53,7 +53,7 @@ const useStyles = makeStyles({
     width: "auto"
   }
 });
-export default function ListCard(props) {
+function ListCard(props) {
   const classes = useStyles();
   const context = useContext(BusContext);
   const goToSeatLayout = (props, id) => {
@@ -67,7 +67,7 @@ export default function ListCard(props) {
           <Card
             key={bus.id}
             className={classes.troot}
-            onClick={event => context.toggleDrawer(event, true)} //goToSeatLayout(props, bus.id)}
+            onClick={context.toggleDrawer(true)} //goToSeatLayout(props, bus.id)}
           >
             <Grid container spacing={0}>
               <Grid item xs={10} className={classes.gridPad}>
@@ -205,3 +205,5 @@ export default function ListCard(props) {
     </React.Fragment>
   );
 }
+export default React.memo(ListCard);
+ListCard.whyDidYouRender = true;

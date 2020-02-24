@@ -59,7 +59,7 @@ const GlobalState = props => {
       value: { error: false, success: false, display: false }
     });
   };
-  const toggleDrawer = (event, open) => {
+  const toggleDrawer = open => event => {
     if (
       event &&
       event.type === "keydown" &&
@@ -104,10 +104,6 @@ const GlobalState = props => {
       const list = await data.json();
       if (list.availableTrips.length > 0) {
         dispatch({
-          type: ALERTS,
-          value: { error: false, success: true, display: true }
-        });
-        dispatch({
           type: LIST,
           value: {
             ...list,
@@ -118,6 +114,10 @@ const GlobalState = props => {
             currentBp: {},
             currentDp: {}
           }
+        });
+        dispatch({
+          type: ALERTS,
+          value: { error: false, success: true, display: true }
         });
       } else {
         dispatch({
